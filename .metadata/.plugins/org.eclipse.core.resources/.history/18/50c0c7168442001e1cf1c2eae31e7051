@@ -1,0 +1,59 @@
+package com.masai.Service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.Entity.Expense;
+import com.masai.Entity.User;
+import com.masai.Exception.NotFoundException;
+import com.masai.Repository.ExpenseRepo;
+import com.masai.Repository.UserRepo;
+
+@Service
+public class UserServiceImpl implements UserServices{
+
+	@Autowired
+	private UserRepo userRepo;
+	
+	@Autowired
+	private ExpenseRepo expenseRepo;
+	
+	@Override
+	public User createUser(User user) {
+		// TODO Auto-generated method stub
+		return userRepo.save(user);
+	}
+
+	@Override
+	public User getUser(String username) throws NotFoundException {
+		// TODO Auto-generated method stub
+		return userRepo.findByUsername(username)
+				.orElseThrow(()-> new NotFoundException("User not found"));
+	}
+
+	@Override
+	public Expense createExpense(Expense expense, String username) throws NotFoundException {
+		// TODO Auto-generated method stub
+		User user = getUser(username);
+		List<Expense> exp = user.getExpenses();
+		exp.add(expense);
+		user.setExpenses(exp);
+		userRepo.save(user);
+		return expenseRepo.save(expense);
+	}
+
+	@Override
+	public List<Expense> getUserExpense(User user) {
+		// TODO Auto-generated method stub
+		return expenseRepo.findByUser(user);
+	}
+
+	@Override
+	public List<Expense> getUserExpensesSortedByDate(User user) {
+		// TODO Auto-generated method stub
+		return expenseRepo.findAll();
+	}
+
+}

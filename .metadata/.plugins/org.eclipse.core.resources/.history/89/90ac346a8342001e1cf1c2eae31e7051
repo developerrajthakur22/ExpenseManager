@@ -1,0 +1,21 @@
+package com.masai.Service;
+
+import java.util.List;
+
+import com.masai.Entity.Expense;
+import com.masai.Entity.User;
+import com.masai.Exception.NotFoundException;
+
+public interface UserServices {
+
+	public User createUser(User user);
+	
+	public User getUser(String username) throws NotFoundException;
+	
+	public Expense createExpense(Expense expense, String username) throws NotFoundException;
+	
+	public List<Expense> getUserExpense(User user);
+	
+	public List<Expense> getUserExpensesSortedByDate(User user);
+	
+}
